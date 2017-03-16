@@ -1,59 +1,24 @@
+db.persons.drop();
 db.createCollection('persons', {
         validator: {
             $and: [
                 { name: {$type: 'string'} },
                 { birthday: {$type: 'date'} },
-                { country: {$type: 'string'} },
-                {
-                	occupations: [
-                		{$type: 'string'}
-			]
-                },
-		{
-			films: [
-				{ film_id: {$type: 'string'} },
-				{ position: {$type: 'string'} }
-			]
-		}
+                { country: {$type: 'string'} }
             ]
         }
     }
 );
 db.persons.createIndex({name: 1});
 
+db.films.drop();
 db.createCollection('films', {
         validator: {
             $and: [
                 { name: {$type: 'string'} },
-                {
-                    producers: [
-                        { person_id: {$type: 'string'} }
-                    ]
-                },
                 { year: {$type: 'int'} },
                 { duration: {$type: 'int'} },
-                {
-                    countries: [
-                        { name: {$type: 'string'} }
-                    ]
-                },
-                { rating: {$type: 'double'} },
-                {
-                    genres: [
-                        { name: {$type: 'string'} }
-                    ]
-                },
-                { description: {$type: 'string'} },
-                {
-                    actors: [
-                        { person_id: {$type: 'string'} }
-                    ]
-                },
-                {
-                    reviews: [
-                        { review_id: {$type: 'string'} }
-                    ]
-                }
+                { description: {$type: 'string'} }
             ]
         }
     }
@@ -61,32 +26,24 @@ db.createCollection('films', {
 db.films.createIndex({name: 1});
 db.films.createIndex({rating: 1});
 
+db.users.drop();
 db.createCollection('users', {
         validator: {
             $and: [
                 { nickname: {$type: 'string'} },
                 { email: {$type: 'string'} },
-                { password: {$type: 'string'} },  //hash?! auth
+                { password: {$type: 'string'} },
                 { birthday: {$type: 'date'} },
                 { registration_date: {$type: 'date'} },
                 { country: {$type: 'string'} },
-                { city: {$type: 'string'} },
-                {
-                    reviews: [
-                        { review_id: {$type: 'string'} }
-                    ]
-                },
-                {
-                    friends: [
-                        { user_id: {$type: 'string'} }
-                    ]
-                }
+                { city: {$type: 'string'} }
             ]
         }
     }
 );
 db.users.createIndex({nickname: 1});
 
+db.reviews.drop();
 db.createCollection('reviews', {
         validator: {
             $and: [
@@ -112,15 +69,11 @@ db.createCollection("cinemas", {
     }
 )
 
+db.cinema_sessions.drop();
 db.createCollection("cinema_sessions", {
         validator: {
             $and: [
-                {
-                    film: {
-                        film_id: {$type: 'string'} ,
-                        film_name: {$type: 'string'}
-                    }
-                },
+                { film_id: {$type: 'string'} } ,
                 { price: {$type: 'int'} },
                 { cinema_id: {$type: 'string'} },
                 { hall: {$type: 'int'} },
