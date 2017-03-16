@@ -1,3 +1,5 @@
+db = new Mongo().getDB("db");
+
 db.createCollection('persons', {
     validator: {
         $and: [
@@ -51,6 +53,7 @@ db.createCollection('films', {
         ]
     }
 }
+);
 db.films.createIndex({name: 1});
 db.films.createIndex({rating: 1});
 
@@ -77,6 +80,7 @@ db.createCollection('users', {
         ]
     }
 }
+);
 db.users.createIndex({nickname: 1});
 
 db.createCollection('reviews', {
@@ -90,5 +94,6 @@ db.createCollection('reviews', {
         ]
     }
 }
+);
 db.reviews.createIndex({film_id: 1});
 
