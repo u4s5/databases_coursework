@@ -5,10 +5,16 @@ db.createCollection('persons', {
                 { birthday: {$type: 'date'} },
                 { country: {$type: 'string'} },
                 {
-                    occupations: [
-                        {$type: 'string'}
-                    ]
-                }
+                	occupations: [
+                		{$type: 'string'}
+			]
+                },
+		{
+			films: [
+				{ film_id: {$type: 'string'} },
+				{ position: {$type: 'string'} }
+			]
+		}
             ]
         }
     }
