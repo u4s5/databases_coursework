@@ -90,36 +90,5 @@ db.createCollection('reviews', {
         ]
     }
 }
-
-db.createCollection("tickets", {
-        validator: {
-            $and: [
-                {
-                    film: {
-                        film_id: {$type: 'string'} ,
-                        film_name: {$type: 'string'}
-                    }
-                },
-                { price: {$type: 'int'} },
-                {
-                    cinema: {
-                        name: {$type: 'string'},
-                        adress: {$type: 'string'}
-                    }
-                },
-                { hall: {$type: 'int'} },
-                { row: {$type: 'int'} },
-                { seat: {$type: 'int'} },
-                { status: {$type: 'int'} },
-                { date: {$type: 'date'} }
-            ]
-        }
-    }
-)
-
-db.tickets.createIndex({cinema: 1});
-db.tickets.createIndex({film_id: 1});
-db.tickets.createIndex({price: 1});
-
-
+db.reviews.createIndex({film_id: 1});
 
