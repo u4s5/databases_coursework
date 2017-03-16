@@ -124,9 +124,6 @@ db.createCollection("cinema_sessions", {
                 { price: {$type: 'int'} },
                 { cinema_id: {$type: 'string'} },
                 { hall: {$type: 'int'} },
-                { row: {$type: 'int'} },
-                { seat: {$type: 'int'} },
-                { status: {$type: 'int'} },
                 { date: {$type: 'date'} }
             ]
         }
