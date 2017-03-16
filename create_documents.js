@@ -1,17 +1,17 @@
 db.createCollection('persons', {
-    validator: {
-        $and: [
-            { name: {$type: 'string'} },
-            { birthday: {$type: 'date'} },
-            { country: {$type: 'string'} },
-            {
-                occupations: [
-                    {$type: 'string'}
-                ]
-            }
-        ]
+        validator: {
+            $and: [
+                { name: {$type: 'string'} },
+                { birthday: {$type: 'date'} },
+                { country: {$type: 'string'} },
+                {
+                    occupations: [
+                        {$type: 'string'}
+                    ]
+                }
+            ]
+        }
     }
-}
 );
 db.persons.createIndex({name: 1});
 
@@ -19,18 +19,18 @@ db.createCollection('films', {
     validator: {
         $and: [
             { name: {$type: 'string'} },
-	    {
+            {
                 producers: [
                     { person_id: {$type: 'string'} }
                 ]
             },
             { year: {$type: 'int'} },
             { duration: {$type: 'int'} },
-            { 
-		countries: [
-		    { name: {$type: 'string'} }
-		]
-	    },
+            {
+                countries: [
+                    { name: {$type: 'string'} }
+                ]
+            },
             { rating: {$type: 'double'} },
             {
                 genres: [
@@ -91,7 +91,18 @@ db.createCollection('reviews', {
     }
 }
 
-db.createCollection("tickets", {
+db.createCollection("cinemas", {
+        validator: {
+            $and: [
+                { name: {$type: 'string'} },
+                { adress: {$type: 'string'} },
+                { rating: {$type: 'double'} },
+            ]
+        }
+    }
+)
+
+db.createCollection("cinema_sessions", {
         validator: {
             $and: [
                 {
@@ -101,12 +112,7 @@ db.createCollection("tickets", {
                     }
                 },
                 { price: {$type: 'int'} },
-                {
-                    cinema: {
-                        name: {$type: 'string'},
-                        adress: {$type: 'string'}
-                    }
-                },
+                { cinema_id: {$type: 'string'} },
                 { hall: {$type: 'int'} },
                 { row: {$type: 'int'} },
                 { seat: {$type: 'int'} },
