@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2017-03-28 22:26:55.173
+-- Last modification date: 2017-03-28 22:58:04.392
 
 -- tables
 -- Table: Activities
@@ -8,8 +8,24 @@ CREATE TABLE Activities (
     person int  NOT NULL,
     kind int  NOT NULL,
     film int  NOT NULL,
+    CONSTRAINT Activities_unique UNIQUE (person, kind, film),
     CONSTRAINT Activities_pk PRIMARY KEY (id)
 ) ;
+
+CREATE INDEX Activities_person 
+on Activities 
+(person ASC)
+;
+
+CREATE INDEX Activities_film 
+on Activities 
+(film ASC)
+;
+
+CREATE INDEX Activities_kind 
+on Activities 
+(kind ASC)
+;
 
 -- Table: Cinema_sessions
 CREATE TABLE Cinema_sessions (
@@ -22,6 +38,16 @@ CREATE TABLE Cinema_sessions (
     CONSTRAINT Cinema_sessions_pk PRIMARY KEY (id)
 ) ;
 
+CREATE INDEX Cinema_sessions_film 
+on Cinema_sessions 
+(film ASC)
+;
+
+CREATE INDEX Cinema_sessions_cinema 
+on Cinema_sessions 
+(cinema ASC)
+;
+
 -- Table: Cinemas
 CREATE TABLE Cinemas (
     id int  NOT NULL,
@@ -31,6 +57,11 @@ CREATE TABLE Cinemas (
     CONSTRAINT Cinemas_pk PRIMARY KEY (id)
 ) ;
 
+CREATE INDEX Cinemas_name 
+on Cinemas 
+(name ASC)
+;
+
 -- Table: Films
 CREATE TABLE Films (
     id int  NOT NULL,
@@ -38,7 +69,43 @@ CREATE TABLE Films (
     year int  NOT NULL,
     duration int  NOT NULL,
     description clob  NOT NULL,
+    rating number(5,3)  NOT NULL,
     CONSTRAINT Films_pk PRIMARY KEY (id)
+) ;
+
+CREATE INDEX Films_name 
+on Films 
+(name ASC)
+;
+
+CREATE INDEX Films_rating 
+on Films 
+(rating ASC)
+;
+
+-- Table: Films_genres
+CREATE TABLE Films_genres (
+    id int  NOT NULL,
+    film int  NOT NULL,
+    genre int  NOT NULL,
+    CONSTRAINT Films_genres_pk PRIMARY KEY (id)
+) ;
+
+CREATE INDEX Films_genres 
+on Films_genres 
+(film ASC)
+;
+
+CREATE INDEX Genres_films 
+on Films_genres 
+(genre ASC)
+;
+
+-- Table: Genres
+CREATE TABLE Genres (
+    id int  NOT NULL,
+    name varchar2(30)  NOT NULL,
+    CONSTRAINT Genres_pk PRIMARY KEY (id)
 ) ;
 
 -- Table: Kinds_of_activities
@@ -57,6 +124,11 @@ CREATE TABLE Persons (
     CONSTRAINT Persons_pk PRIMARY KEY (id)
 ) ;
 
+CREATE INDEX Persons_name 
+on Persons 
+(name ASC)
+;
+
 -- Table: Reviews
 CREATE TABLE Reviews (
     id int  NOT NULL,
@@ -67,6 +139,21 @@ CREATE TABLE Reviews (
     film int  NOT NULL,
     CONSTRAINT Reviews_pk PRIMARY KEY (id)
 ) ;
+
+CREATE INDEX Reviews_film 
+on Reviews 
+(film ASC)
+;
+
+CREATE INDEX Reviews_author 
+on Reviews 
+(author ASC)
+;
+
+CREATE INDEX Reviews_date 
+on Reviews 
+("date" ASC)
+;
 
 -- Table: Users
 CREATE TABLE Users (
@@ -80,6 +167,11 @@ CREATE TABLE Users (
     city varchar2(50)  NOT NULL,
     CONSTRAINT Users_pk PRIMARY KEY (id)
 ) ;
+
+CREATE INDEX Users_name 
+on Users 
+(nickname ASC)
+;
 
 -- foreign keys
 -- Reference: Activities_Films (table: Activities)
@@ -111,6 +203,16 @@ ALTER TABLE Cinema_sessions ADD CONSTRAINT Films_Cinema_sessions
 ALTER TABLE Reviews ADD CONSTRAINT Films_Reviews
     FOREIGN KEY (film)
     REFERENCES Films (id);
+
+-- Reference: Films_genres_Films (table: Films_genres)
+ALTER TABLE Films_genres ADD CONSTRAINT Films_genres_Films
+    FOREIGN KEY (film)
+    REFERENCES Films (id);
+
+-- Reference: Films_genres_Genres (table: Films_genres)
+ALTER TABLE Films_genres ADD CONSTRAINT Films_genres_Genres
+    FOREIGN KEY (genre)
+    REFERENCES Genres (id);
 
 -- Reference: Users_Reviews (table: Reviews)
 ALTER TABLE Reviews ADD CONSTRAINT Users_Reviews
