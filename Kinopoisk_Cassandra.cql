@@ -1,166 +1,114 @@
-CREATE TABLE Activities (
-    id int  PRIMARY KEY,
-    person int,
-    kind int,
-    film int
+CREATE TABLE Persons_films(
+    person uuid,
+    kind text,
+    film uuid,
+	PRIMARY KEY(person, film, kind)
 );
 
-CREATE INDEX Activities_person 
-on Activities 
-(person)
-;
-
-CREATE INDEX Activities_film 
-on Activities 
-(film)
-;
-
-CREATE INDEX Activities_kind 
-on Activities 
-(kind)
-;
+CREATE TABLE Films_persons(
+    person uuid,
+    kind text,
+    film uuid,
+	PRIMARY KEY(film, person, kind)
+);
 
 -- Table: Cinema_sessions
 CREATE TABLE Cinema_sessions (
-    id int  PRIMARY KEY,
-    film int,
-    cinema int,
+    film uuid,
+    cinema uuid,
     price int,
     hall int,
-    time timestamp
+    time timestamp,
+	PRIMARY KEY(film, cinema, time)
 ) ;
-
-CREATE INDEX Cinema_sessions_film 
-on Cinema_sessions 
-(film)
-;
-
-CREATE INDEX Cinema_sessions_cinema 
-on Cinema_sessions 
-(cinema)
-;
 
 -- Table: Cinemas
 CREATE TABLE Cinemas (
-    id int  PRIMARY KEY,
-    name varchar,
-    adress varchar,
-    rating float
+	id uuid,
+    name text,
+    adress text,
+    rating float,
+	PRIMARY KEY((name, adress), id)
 ) ;
 
-CREATE INDEX Cinemas_name 
+CREATE INDEX Cinemas_rating 
 on Cinemas 
-(name)
+(rating)
 ;
 
 -- Table: Films
 CREATE TABLE Films (
-    id int PRIMARY KEY,
-    name varchar,
+    id uuid,
+    name text,
     year int,
     duration int,
     description text,
-    rating float
-) ;
-
-CREATE INDEX Films_name 
-on Films 
-(name)
-;
+    rating float,
+	countries set<text>,
+	PRIMARY KEY(name, id)
+);
 
 CREATE INDEX Films_rating 
 on Films 
 (rating)
 ;
 
--- Table: Films_genres
 CREATE TABLE Films_genres (
-    id int  PRIMARY KEY,
-    film int,
-    genre int
-) ;
+    film uuid,
+    genre text,
+    PRIMARY KEY (film, genre)
+);
 
-CREATE INDEX Films_genres 
-on Films_genres 
-(film)
-;
-
-CREATE INDEX Genres_films 
-on Films_genres 
-(genre)
-;
+CREATE TABLE Genres_films(
+    film uuid,
+    genre text,
+    PRIMARY KEY (genre, film)
+);
 
 CREATE TABLE Friends (
-    id int  PRIMARY KEY,
-    user1 int,
-    user2 int
-) ;
-
--- Table: Genres
-CREATE TABLE Genres (
-    id int  PRIMARY KEY,
-    name varchar
-) ;
-
--- Table: Kinds_of_activities
-CREATE TABLE Kinds_of_activities (
-    id int PRIMARY KEY,
-    name varchar
+    user text,
+    friend text,
+	PRIMARY KEY(user, friend)
 ) ;
 
 -- Table: Persons
 CREATE TABLE Persons (
-    id int PRIMARY KEY,
-    name varchar,
+    id uuid,
+    name text,
     birthday date,
-    country varchar
+    country text,
+	occupations set<text>,
+	PRIMARY KEY(name, id)
 );
-
-CREATE INDEX Persons_name 
-on Persons 
-(name)
-;
 
 -- Table: Reviews
 CREATE TABLE Reviews (
-    id int  PRIMARY KEY,
+    id timeuuid PRIMARY KEY,
     mark int,
-    review text,
-    "date" date,
-    author int,
-    film int
-) ;
+    review text
+);
 
-CREATE INDEX Reviews_film 
-on Reviews 
-(film)
-;
+CREATE TABLE Users_reviews (
+    review timeuuid,
+    author text,
+	PRIMARY_KEY(author, review)
+);
 
-CREATE INDEX Reviews_author 
-on Reviews 
-(author)
-;
-
-CREATE INDEX Reviews_date 
-on Reviews 
-("date")
-;
+CREATE TABLE Films_reviews (
+    review timeuuid,
+    film uuid,
+	PRIMARY_KEY(film, review)
+);
 
 -- Table: Users
 CREATE TABLE Users (
-    id int PRIMARY KEY,
-    nickname varchar,
-    email varchar,
-    password varchar,
+    nickname text PRIMARY KEY,
+    email text,
+    password text,
     birthday date,
     registration_date date,
-    country varchar,
-    city varchar
+    country text,
+    city text
 );
-
-CREATE INDEX Users_name 
-on Users 
-(nickname)
-;
 
 
