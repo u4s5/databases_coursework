@@ -1,8 +1,3 @@
--- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2017-03-28 22:58:04.392
-
--- tables
--- Table: Activities
 CREATE TABLE Activities (
     id int  PRIMARY KEY,
     person int,
@@ -94,6 +89,12 @@ CREATE INDEX Genres_films
 on Films_genres 
 (genre)
 ;
+
+CREATE TABLE Friends (
+    id int  PRIMARY KEY,
+    user1 int,
+    user2 int
+) ;
 
 -- Table: Genres
 CREATE TABLE Genres (

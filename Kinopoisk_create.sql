@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2017-03-28 22:58:04.392
+-- Last modification date: 2017-03-29 17:21:20.023
 
 -- tables
 -- Table: Activities
@@ -100,6 +100,14 @@ CREATE INDEX Genres_films
 on Films_genres 
 (genre ASC)
 ;
+
+-- Table: Friends
+CREATE TABLE Friends (
+    id int  NOT NULL,
+    user1 int  NOT NULL,
+    user2 int  NOT NULL,
+    CONSTRAINT Friends_pk PRIMARY KEY (id)
+) ;
 
 -- Table: Genres
 CREATE TABLE Genres (
@@ -213,6 +221,16 @@ ALTER TABLE Films_genres ADD CONSTRAINT Films_genres_Films
 ALTER TABLE Films_genres ADD CONSTRAINT Films_genres_Genres
     FOREIGN KEY (genre)
     REFERENCES Genres (id);
+
+-- Reference: Friends_Users1 (table: Friends)
+ALTER TABLE Friends ADD CONSTRAINT Friends_Users1
+    FOREIGN KEY (user1)
+    REFERENCES Users (id);
+
+-- Reference: Friends_Users2 (table: Friends)
+ALTER TABLE Friends ADD CONSTRAINT Friends_Users2
+    FOREIGN KEY (user2)
+    REFERENCES Users (id);
 
 -- Reference: Users_Reviews (table: Reviews)
 ALTER TABLE Reviews ADD CONSTRAINT Users_Reviews
