@@ -72,4 +72,15 @@ MATCH (c:Cinema {name: "Velikan Park", adress: "Alexandrovsky park 4/3"}),
 MERGE (s)-[:CINEMA]->(c)
 MERGE (s)-[:FILM]->(f);
 
-MATCH (n) RETURN n;
+MATCH (actor {name:"Brad Pitt"})-[:ACTED_IN]->(films)
+RETURN actor, films;
+
+MATCH (actor)-[:ACTED_IN]->(f:Film {name: "Mr. & Mrs. Smith"})
+RETURN actor, f;
+
+MATCH (u:User {nickname: "Superuser"})-[:FRIEND]-(friend)
+RETURN friend, u;
+
+MATCH (n)
+RETURN n;
+
