@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MongoFill {
+public class MongoFiller {
 
     private static final int MOVIES_COUNT = 1000000;
     private static final int PEOPLE_COUNT = 2000000;
     private static final int REVIEWS_COUNT = 2000000;
 
-    public static void main(String[] args) throws IOException {
+    public static void fill() {
         // connect to database
         MongoClient mongoClient = new MongoClient("localhost", 27017);
         MongoDatabase db = mongoClient.getDatabase("movieDatabase");
@@ -70,7 +70,7 @@ public class MongoFill {
         for (int i = 0; i < REVIEWS_COUNT; i++) {
             document = new Document("_id", i)
                     .append("author_name", RandomGenerator.generateName())
-                    .append("mark", (int)(Math.round(RandomGenerator.generateRating())))
+                    .append("mark", (int) (Math.round(RandomGenerator.generateRating())))
                     .append("date", RandomGenerator.generateDate())
                     .append("text", RandomGenerator.generateText(300))
                     .append("film_id", random.nextInt(MOVIES_COUNT));
