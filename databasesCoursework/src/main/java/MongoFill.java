@@ -70,7 +70,7 @@ public class MongoFill {
         for (int i = 0; i < REVIEWS_COUNT; i++) {
             document = new Document("_id", i)
                     .append("author_name", RandomGenerator.generateName())
-                    .append("mark", Math.round(RandomGenerator.generateRating()))
+                    .append("mark", (int)(Math.round(RandomGenerator.generateRating())))
                     .append("date", RandomGenerator.generateDate())
                     .append("text", RandomGenerator.generateText(300))
                     .append("film_id", random.nextInt(MOVIES_COUNT));
