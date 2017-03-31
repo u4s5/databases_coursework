@@ -6,9 +6,9 @@ import java.util.Random;
 
 public class RedisFiller {
 
-    private static final int MOVIES_COUNT = 500000;
-    private static final int PEOPLE_COUNT = 1000000;
-    private static final int REVIEWS_COUNT = 1000000;
+    private static final int MOVIES_COUNT = 250000;
+    private static final int PEOPLE_COUNT = 500000;
+    private static final int REVIEWS_COUNT = 500000;
 
     public static void fill() {
 
