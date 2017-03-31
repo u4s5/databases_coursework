@@ -3,7 +3,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,15 +14,17 @@ public class MongoFiller {
     private static final int REVIEWS_COUNT = 2000000;
 
     public static void fill() {
+
         // connect to database
         MongoClient mongoClient = new MongoClient("localhost", 27017);
         MongoDatabase db = mongoClient.getDatabase("movieDatabase");
+        db.drop();
 
-        // fill collection of people
-        MongoCollection collection = db.getCollection("people");
         Random random = new Random();
         Document document;
 
+        // fill collection of people
+        MongoCollection collection = db.getCollection("people");
         for (int i = 0; i < PEOPLE_COUNT; i++) {
             document = new Document("_id", i)
                     .append("name", RandomGenerator.generateName())
@@ -69,7 +70,7 @@ public class MongoFiller {
         collection = db.getCollection("reviews");
         for (int i = 0; i < REVIEWS_COUNT; i++) {
             document = new Document("_id", i)
-                    .append("author_name", RandomGenerator.generateName())
+                    .append("author", RandomGenerator.generateName())
                     .append("mark", (int) (Math.round(RandomGenerator.generateRating())))
                     .append("date", RandomGenerator.generateDate())
                     .append("text", RandomGenerator.generateText(300))

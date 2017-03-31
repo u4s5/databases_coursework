@@ -61,15 +61,15 @@ public class RandomGenerator {
         return new Date(ThreadLocalRandom.current().nextLong(minDate, maxDate));
     }
 
-    public static int generateYear() {
+    public static Integer generateYear() {
         return random.nextInt(100) + 1918;
     }
 
-    public static int generateDuration() {
+    public static Integer generateDuration() {
         return random.nextInt(200) + 50;
     }
 
-    public static double generateRating() {
+    public static Double generateRating() {
         return Math.round((random.nextInt(10) + random.nextDouble()) * 100) / 100.0;
     }
 
