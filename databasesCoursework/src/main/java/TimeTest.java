@@ -1,3 +1,6 @@
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Session;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -39,6 +42,20 @@ public class TimeTest {
 
         for (int i = 0; i < TEST_COUNT; i++) {
             System.out.println(jedis.hgetAll("film:" + random.nextInt(250000)).toString());
+        }
+
+        System.out.println("____________________");
+        System.out.println("Average time of getting 1 record (ms) = " + (System.currentTimeMillis() - start) / TEST_COUNT);
+    }
+
+    public static void testCassandra() {
+        Cluster cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
+        Session session = cluster.newSession();
+
+        long start = System.currentTimeMillis();
+
+        for (int i = 0; i < TEST_COUNT; i++) {
+            System.out.println(session.execute("SELECT name FROM movieFinder.films WHERE id=" + random.nextInt(250000)).one().getString("name"));
         }
 
         System.out.println("____________________");
