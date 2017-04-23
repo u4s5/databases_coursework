@@ -22,6 +22,7 @@
     </build>
 
     <dependencies>
+
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver</artifactId>
@@ -53,6 +54,13 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.6.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.neo4j.driver</groupId>
+            <artifactId>neo4j-java-driver</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+
     </dependencies>
 
 </project>

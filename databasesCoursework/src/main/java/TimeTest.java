@@ -3,6 +3,9 @@ import com.datastax.driver.core.Session;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import org.neo4j.driver.v1.AuthTokens;
+import org.neo4j.driver.v1.Driver;
+import org.neo4j.driver.v1.GraphDatabase;
 import redis.clients.jedis.Jedis;
 
 import java.util.Random;
@@ -55,6 +58,20 @@ public class TimeTest {
 
         for (int i = 0; i < TEST_COUNT; i++) {
             System.out.println(session.execute("SELECT name FROM movieFinder.films WHERE id=" + random.nextInt(250000)).one().getString("name"));
+        }
+
+        System.out.println("____________________");
+        System.out.println("Average time of getting 1 record (ms) = " + (System.currentTimeMillis() - start) / TEST_COUNT);
+    }
+
+    public static void testNeo4j() {
+        Driver driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "qwer1234"));
+        org.neo4j.driver.v1.Session session = driver.session();
+
+        long start = System.currentTimeMillis();
+
+        for (int i = 0; i < TEST_COUNT; i++) {
+            System.out.println(session.run("MATCH (f:Film) WHERE f.id = " + random.nextInt(250000) + " RETURN f.name AS name").next().get("name").asString());
         }
 
         System.out.println("____________________");
