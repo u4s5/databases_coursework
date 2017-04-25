@@ -8,6 +8,10 @@ import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.GraphDatabase;
 import redis.clients.jedis.Jedis;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Random;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -33,7 +37,7 @@ public class TimeTest {
             System.out.println(collection.find(eq("_id", random.nextInt(1000000))).first().toString());
         }
 
-        System.out.println("____________________");
+        System.out.println("____________________\nMONGO\n");
         System.out.println("Average time of getting 1 record (ms) = " + (System.currentTimeMillis() - start) / TEST_COUNT);
     }
 
@@ -46,7 +50,7 @@ public class TimeTest {
             System.out.println(jedis.hgetAll("film:" + random.nextInt(250000)).toString());
         }
 
-        System.out.println("____________________");
+        System.out.println("____________________\nREDIS\n");
         System.out.println("Average time of getting 1 record (ms) = " + (System.currentTimeMillis() - start) / TEST_COUNT);
     }
 
@@ -60,7 +64,7 @@ public class TimeTest {
             System.out.println(session.execute("SELECT name FROM movieFinder.films WHERE id=" + random.nextInt(250000)).one().getString("name"));
         }
 
-        System.out.println("____________________");
+        System.out.println("____________________\nCASSANDRA\n");
         System.out.println("Average time of getting 1 record (ms) = " + (System.currentTimeMillis() - start) / TEST_COUNT);
     }
 
@@ -74,8 +78,37 @@ public class TimeTest {
             System.out.println(session.run("MATCH (f:Film) WHERE f.id = " + random.nextInt(250000) + " RETURN f.name AS name").next().get("name").asString());
         }
 
-        System.out.println("____________________");
+        System.out.println("____________________\nNEO4J\n");
         System.out.println("Average time of getting 1 record (ms) = " + (System.currentTimeMillis() - start) / TEST_COUNT);
+    }
+
+    public static void testPostgreSQL() {
+
+        Connection connection = null;
+        Statement statement = null;
+
+        try {
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager
+                    .getConnection("jdbc:postgresql://localhost:5432/moviefinder",
+                            "user1", "password");
+            statement = connection.createStatement();
+
+            long start = System.currentTimeMillis();
+
+            ResultSet resultSet;
+            for (int i = 0; i < TEST_COUNT; i++) {
+                resultSet = statement.executeQuery("SELECT name FROM moviefinder.films WHERE id=" + random.nextInt(250000));
+                resultSet.next();
+                System.out.println(resultSet.getString("name"));
+            }
+
+            System.out.println("____________________\nPOSTGRESQL\n");
+            System.out.println("Average time of getting 1 record (ms) = " + (System.currentTimeMillis() - start) / TEST_COUNT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
     }
 
 }

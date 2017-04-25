@@ -10,8 +10,11 @@ public class Main {
         //CassandraFiller.fill();
         //TimeTest.testCassandra();
 
-        Neo4jFiller.fill();
-        TimeTest.testNeo4j();
+        //Neo4jFiller.fill();
+        //TimeTest.testNeo4j();
+
+        PostgreSQLFiller.fill();
+        TimeTest.testPostgreSQL();
     }
 
 }
