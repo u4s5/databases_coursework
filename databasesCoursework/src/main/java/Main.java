@@ -1,16 +1,18 @@
+import filling.PostgreSQLFiller;
+
 public class Main {
 
     public static void main(String[] args) {
-        //MongoFiller.fill();
+        //filling.MongoFiller.fill();
         //TimeTest.testMongo();
 
-        //RedisFiller.fill();
+        //filling.RedisFiller.fill();
         //TimeTest.testRedis();
 
-        //CassandraFiller.fill();
+        //filling.CassandraFiller.fill();
         //TimeTest.testCassandra();
 
-        //Neo4jFiller.fill();
+        //filling.Neo4jFiller.fill();
         //TimeTest.testNeo4j();
 
         PostgreSQLFiller.fill();
