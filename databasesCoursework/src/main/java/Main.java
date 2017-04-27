@@ -1,8 +1,10 @@
-import filling.*;
+import api.API;
+
+import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //MongoFiller.fill();
         //TimeTest.testMongo();
 
@@ -15,8 +17,10 @@ public class Main {
         //Neo4jFiller.fill();
         //TimeTest.testNeo4j();
 
-        PostgreSQLFiller.fill();
-        TimeTest.testPostgreSQL();
+        //PostgreSQLFiller.fill();
+        //TimeTest.testPostgreSQL();
+
+        API.create();
     }
 
 }

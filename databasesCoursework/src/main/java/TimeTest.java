@@ -34,7 +34,7 @@ public class TimeTest {
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < TEST_COUNT; i++) {
-            System.out.println(collection.find(eq("_id", random.nextInt(1000000))).first().toString());
+            System.out.println(collection.find(eq("_id", random.nextInt(250000))).first().toString());
         }
 
         System.out.println("____________________\nMONGO\n");
