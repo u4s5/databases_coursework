@@ -213,13 +213,13 @@ public class MongoCRUD {
 
         try {
             result = collection.updateOne(Filters.and(eq("_id", id)),
-                    new Document("_id", id)
+                    new Document("$set", new Document("_id", id)
                             .append("name", newName)
                             .append("birthday", StringToDateParser.parse(newBirthday))
                             .append("country", newCountry)
                             .append("occupations", new ArrayList<String>() {{
                                 add(newOccupation);
-                            }}));
+                            }})));
         } catch (Exception e) {
             System.err.println("Mongo write exception");
             return null;
@@ -236,12 +236,12 @@ public class MongoCRUD {
 
         try {
             result = collection.updateOne(Filters.and(eq("_id", id)),
-                    new Document("_id", id)
+                    new Document("$set", new Document("_id", id)
                             .append("author", newAuthor)
                             .append("mark", newMark)
                             .append("date", StringToDateParser.parse(newDate))
                             .append("text", newText)
-                            .append("film_id", newFilmId));
+                            .append("film_id", newFilmId)));
         } catch (Exception e) {
             System.err.println("Mongo write exception");
             return null;
