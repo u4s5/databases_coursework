@@ -1,4 +1,5 @@
 /databasesCoursework/.idea/
 *.iml
 /databasesCoursework/target/
+*.rdb
 
