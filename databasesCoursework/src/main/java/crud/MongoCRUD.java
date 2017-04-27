@@ -116,6 +116,9 @@ public class MongoCRUD {
             return null;
         }
 
+        if (!cursor.hasNext())
+            return null;
+
         return new ArrayList<String>() {{
             while (cursor.hasNext())
                 add(cursor.next().toString());
@@ -133,6 +136,9 @@ public class MongoCRUD {
             return null;
         }
 
+        if (!cursor.hasNext())
+            return null;
+
         return new ArrayList<String>() {{
             while (cursor.hasNext())
                 add(cursor.next().toString());
@@ -149,6 +155,9 @@ public class MongoCRUD {
             System.err.println("Mongo write exception");
             return null;
         }
+
+        if (!cursor.hasNext())
+            return null;
 
         return new ArrayList<String>() {{
             while (cursor.hasNext())
@@ -168,7 +177,7 @@ public class MongoCRUD {
 
         try {
             result = collection.updateOne(Filters.and(eq("_id", id)),
-                    new Document("_id", id)
+                    new Document("$set", new Document("_id", id)
                             .append("name", newName)
                             .append("year", newYear)
                             .append("duration", newDuration)
@@ -187,7 +196,7 @@ public class MongoCRUD {
                                 add(newActor1Id);
                                 add(newActor2Id);
                                 add(newActor3Id);
-                            }}));
+                            }})));
         } catch (Exception e) {
             System.err.println("Mongo write exception");
             return null;
