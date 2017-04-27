@@ -2,7 +2,7 @@ package api;
 
 public class PostgresqlAPI {
 
-    public static void create(){
+    public static void create() {
 
     }
 

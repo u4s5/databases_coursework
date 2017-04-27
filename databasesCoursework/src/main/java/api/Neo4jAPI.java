@@ -2,7 +2,7 @@ package api;
 
 public class Neo4jAPI {
 
-    public static void create(){
+    public static void create() {
 
     }
 

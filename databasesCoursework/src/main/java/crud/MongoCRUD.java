@@ -132,7 +132,7 @@ public class MongoCRUD {
         try {
             cursor = collection.find(eq("name", name)).iterator();
         } catch (Exception e) {
-            System.err.println("Mongo write exception");
+            System.err.println("Mongo exception");
             return null;
         }
 
@@ -152,7 +152,7 @@ public class MongoCRUD {
         try {
             cursor = collection.find(eq("author", author)).iterator();
         } catch (Exception e) {
-            System.err.println("Mongo write exception");
+            System.err.println("Mongo exception");
             return null;
         }
 
@@ -198,7 +198,7 @@ public class MongoCRUD {
                                 add(newActor3Id);
                             }})));
         } catch (Exception e) {
-            System.err.println("Mongo write exception");
+            System.err.println("Mongo exception");
             return null;
         }
 
@@ -221,7 +221,7 @@ public class MongoCRUD {
                                 add(newOccupation);
                             }})));
         } catch (Exception e) {
-            System.err.println("Mongo write exception");
+            System.err.println("Mongo exception");
             return null;
         }
 
@@ -243,7 +243,7 @@ public class MongoCRUD {
                             .append("text", newText)
                             .append("film_id", newFilmId)));
         } catch (Exception e) {
-            System.err.println("Mongo write exception");
+            System.err.println("Mongo exception");
             return null;
         }
 
@@ -258,7 +258,7 @@ public class MongoCRUD {
         try {
             result = collection.deleteOne(Filters.and(eq("_id", id)));
         } catch (Exception e) {
-            System.err.println("Mongo write exception");
+            System.err.println("Mongo exception");
             return null;
         }
 
@@ -273,7 +273,7 @@ public class MongoCRUD {
         try {
             result = collection.deleteOne(Filters.and(eq("_id", id)));
         } catch (Exception e) {
-            System.err.println("Mongo write exception");
+            System.err.println("Mongo exception");
             return null;
         }
 
@@ -288,7 +288,7 @@ public class MongoCRUD {
         try {
             result = collection.deleteOne(Filters.and(eq("_id", id)));
         } catch (Exception e) {
-            System.err.println("Mongo write exception");
+            System.err.println("Mongo exception");
             return null;
         }
 
