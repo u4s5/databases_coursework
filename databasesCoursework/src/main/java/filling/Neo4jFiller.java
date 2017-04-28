@@ -10,9 +10,9 @@ import java.util.Random;
 
 public class Neo4jFiller {
 
-    private static final int MOVIES_COUNT = 250000;
-    private static final int PEOPLE_COUNT = 500000;
-    private static final int REVIEWS_COUNT = 500000;
+    private static final int MOVIES_COUNT = 25000;
+    private static final int PEOPLE_COUNT = 50000;
+    private static final int REVIEWS_COUNT = 50000;
 
     public static void fill() {
 

@@ -75,7 +75,7 @@ public class TimeTest {
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < TEST_COUNT; i++) {
-            System.out.println(session.run("MATCH (f:Film) WHERE f.id = " + random.nextInt(250000) + " RETURN f.name AS name").next().get("name").asString());
+            System.out.println(session.run("MATCH (f:Film) WHERE f.id = " + random.nextInt(25000) + " RETURN f.name AS name").next().get("name").asString());
         }
 
         System.out.println("____________________\nNEO4J\n");
