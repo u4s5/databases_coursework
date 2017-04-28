@@ -98,9 +98,10 @@ public class RedisCRUD {
     public static String findFilm(String name) {
 
         Map<String, String> map;
+        String id;
 
         try {
-            String id = jedis.hget("films_names", name);
+            id = jedis.hget("films_names", name);
             map = jedis.hgetAll("film:" + id);
         } catch (Exception e) {
             System.err.println("Redis exception");
@@ -110,14 +111,15 @@ public class RedisCRUD {
         StringBuilder result = new StringBuilder();
         for (String o : map.values()) result.append(o).append(" ");
 
-        return result.toString();
+        return result.append(" id=").append(id).toString();
     }
 
     public static String findPerson(String name) {
         Map<String, String> map;
+        String id;
 
         try {
-            String id = jedis.hget("people_names", name);
+            id = jedis.hget("people_names", name);
             map = jedis.hgetAll("person:" + id);
         } catch (Exception e) {
             System.err.println("Redis exception");
@@ -127,7 +129,7 @@ public class RedisCRUD {
         StringBuilder result = new StringBuilder();
         for (String o : map.values()) result.append(o).append(" ");
 
-        return result.toString();
+        return result.append(" id=").append(id).toString();
     }
 
     public static String findReview(String id) {
@@ -143,7 +145,7 @@ public class RedisCRUD {
         StringBuilder result = new StringBuilder();
         for (String o : map.values()) result.append(o).append(" ");
 
-        return result.toString();
+        return result.append(" id=").append(id).toString();
     }
 
     public static String editFilm(String id, String newName, String newYear,
