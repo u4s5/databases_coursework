@@ -6,11 +6,10 @@ import java.util.List;
 
 public class Neo4jCRUD {
 
-    private static Driver driver;
     private static Session session;
 
     static {
-        driver = GraphDatabase.driver("bolt://localhost:7687",
+        Driver driver = GraphDatabase.driver("bolt://localhost:7687",
                 AuthTokens.basic("neo4j", "qwer1234"));
         session = driver.session();
     }

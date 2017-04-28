@@ -102,7 +102,7 @@ public class CassandraFiller {
         }
 
         for (int i = 0; i < REVIEWS_COUNT; i++) {
-            session.execute("INSERT INTO movieFinder.films_reviews(\"film\", \"review\") VALUES (" +
+            session.execute("INSERT INTO movieFinder.films_reviews(\"review\", \"film\") VALUES (" +
                     i + "," +
                     random.nextInt(MOVIES_COUNT) +
                     "); ");
