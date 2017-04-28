@@ -34,7 +34,7 @@ public class MongoCRUD {
         long id = collection.count();
 
         try {
-            collection.insertOne(new Document("_id", id)
+            collection.insertOne(new Document("_id", id + 1)
                     .append("name", name)
                     .append("year", year)
                     .append("duration", duration)
@@ -59,7 +59,7 @@ public class MongoCRUD {
             return null;
         }
 
-        return collection.find(eq("_id", id)).iterator().next().toString();
+        return collection.find(eq("_id", id + 1)).iterator().next().toString();
     }
 
     public static String createPerson(String name, String birthday,
@@ -69,7 +69,7 @@ public class MongoCRUD {
         long id = collection.count();
 
         try {
-            collection.insertOne(new Document("_id", id)
+            collection.insertOne(new Document("_id", id + 1)
                     .append("name", name)
                     .append("birthday", StringToDateParser.parse(birthday))
                     .append("country", country)
@@ -81,7 +81,7 @@ public class MongoCRUD {
             return null;
         }
 
-        return collection.find(eq("_id", id)).iterator().next().toString();
+        return collection.find(eq("_id", id + 1)).iterator().next().toString();
     }
 
     public static String createReview(String author, int mark, String date,
@@ -91,7 +91,7 @@ public class MongoCRUD {
         long id = collection.count();
 
         try {
-            collection.insertOne(new Document("_id", collection.count())
+            collection.insertOne(new Document("_id", collection.count() + 1)
                     .append("author", author)
                     .append("mark", mark)
                     .append("date", StringToDateParser.parse(date))
@@ -102,7 +102,7 @@ public class MongoCRUD {
             return null;
         }
 
-        return collection.find(eq("_id", id)).iterator().next().toString();
+        return collection.find(eq("_id", id + 1)).iterator().next().toString();
     }
 
     public static List<String> findFilm(String name) {
@@ -256,7 +256,7 @@ public class MongoCRUD {
         DeleteResult result;
 
         try {
-            result = collection.deleteOne(Filters.and(eq("_id", id)));
+            result = collection.deleteOne(eq("_id", id));
         } catch (Exception e) {
             System.err.println("Mongo exception");
             return null;
@@ -271,7 +271,7 @@ public class MongoCRUD {
         DeleteResult result;
 
         try {
-            result = collection.deleteOne(Filters.and(eq("_id", id)));
+            result = collection.deleteOne(eq("_id", id));
         } catch (Exception e) {
             System.err.println("Mongo exception");
             return null;
@@ -286,7 +286,7 @@ public class MongoCRUD {
         DeleteResult result;
 
         try {
-            result = collection.deleteOne(Filters.and(eq("_id", id)));
+            result = collection.deleteOne(eq("_id", id));
         } catch (Exception e) {
             System.err.println("Mongo exception");
             return null;
