@@ -20,6 +20,7 @@ import static com.mongodb.client.model.Filters.eq;
 public class TimeTest {
 
     private static final int TEST_COUNT = 1000;
+    private static final int MOVIES_COUNT = 250000;
     private static Random random;
 
     static {
@@ -40,7 +41,7 @@ public class TimeTest {
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < TEST_COUNT; i++) {
-            System.out.println(collection.find(eq("_id", random.nextInt(250000))).first().toString());
+            System.out.println(collection.find(eq("_id", random.nextInt(MOVIES_COUNT))).first().toString());
         }
 
         System.out.println("____________________\nMONGO\n");
@@ -53,7 +54,7 @@ public class TimeTest {
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < TEST_COUNT; i++) {
-            System.out.println(jedis.hgetAll("film:" + random.nextInt(250000)).toString());
+            System.out.println(jedis.hgetAll("film:" + random.nextInt(MOVIES_COUNT)).toString());
         }
 
         System.out.println("____________________\nREDIS\n");
@@ -67,7 +68,7 @@ public class TimeTest {
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < TEST_COUNT; i++) {
-            System.out.println(session.execute("SELECT name FROM movieFinder.films WHERE id=" + random.nextInt(250000)).one().getString("name"));
+            System.out.println(session.execute("SELECT name FROM movieFinder.films WHERE id=" + random.nextInt(MOVIES_COUNT)).one().getString("name"));
         }
 
         System.out.println("____________________\nCASSANDRA\n");
@@ -81,7 +82,7 @@ public class TimeTest {
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < TEST_COUNT; i++) {
-            System.out.println(session.run("MATCH (f:Film) WHERE f.id = " + random.nextInt(25000) + " RETURN f.name AS name").next().get("name").asString());
+            System.out.println(session.run("MATCH (f:Film) WHERE f.id = " + random.nextInt(MOVIES_COUNT) + " RETURN f.name AS name").next().get("name").asString());
         }
 
         System.out.println("____________________\nNEO4J\n");
@@ -104,7 +105,7 @@ public class TimeTest {
 
             ResultSet resultSet;
             for (int i = 0; i < TEST_COUNT; i++) {
-                resultSet = statement.executeQuery("SELECT name FROM moviefinder.films WHERE id=" + random.nextInt(250000));
+                resultSet = statement.executeQuery("SELECT name FROM moviefinder.films WHERE id=" + random.nextInt(MOVIES_COUNT));
                 resultSet.next();
                 System.out.println(resultSet.getString("name"));
             }

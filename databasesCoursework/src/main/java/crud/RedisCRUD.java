@@ -10,7 +10,7 @@ public class RedisCRUD {
     private static Jedis jedis;
 
     static {
-        jedis = new Jedis("localhost");
+        jedis = new Jedis("redis-19168.c10.us-east-1-3.ec2.cloud.redislabs.com", 19168);
     }
 
     public static String createFilm(String name, String year, String duration,
@@ -18,11 +18,8 @@ public class RedisCRUD {
                                     String genre, String description,
                                     String producerId, String actor1Id,
                                     String actor2Id, String actor3Id) {
-
-        String id;
-
         try {
-            id = jedis.keys("film:*").size() + "";
+            String id = jedis.get("counters:films");
             jedis.hmset("film:" + id, new HashMap<String, String>() {{
                 put("name", name);
                 put("country", country);
@@ -31,6 +28,7 @@ public class RedisCRUD {
                 put("duration", duration);
                 put("description", description);
             }});
+            jedis.set("counters:films", String.valueOf(Integer.parseInt(id) + 1));
 
             jedis.sadd("film_genres:" + id, genre);
 
@@ -51,16 +49,14 @@ public class RedisCRUD {
 
     public static String createPerson(String name, String birthday,
                                       String country, String occupation) {
-
-        String id;
-
         try {
-            id = jedis.keys("person:*").size() + "";
+            String id = jedis.get("counters:people");
             jedis.hmset("person:" + id, new HashMap<String, String>() {{
                 put("name", name);
                 put("birthday", birthday);
                 put("country", country);
             }});
+            jedis.set("counters:people", String.valueOf(Integer.parseInt(id) + 1));
 
             jedis.hset("people_names", name, id);
 
@@ -75,11 +71,9 @@ public class RedisCRUD {
 
     public static String createReview(String author, String mark, String date,
                                       String text, String filmId) {
-
         String id;
-
         try {
-            id = jedis.keys("review:*").size() + "";
+            id = jedis.get("counters:reviews");
             jedis.hmset("review:" + id, new HashMap<String, String>() {{
                 put("author", author);
                 put("mark", mark);
@@ -87,6 +81,7 @@ public class RedisCRUD {
                 put("text", text);
                 put("film_id", filmId);
             }});
+            jedis.set("counters:reviews", String.valueOf(Integer.parseInt(id) + 1));
         } catch (Exception e) {
             System.err.println("Redis exception");
             return null;
@@ -96,7 +91,6 @@ public class RedisCRUD {
     }
 
     public static String findFilm(String name) {
-
         Map<String, String> map;
         String id;
 
@@ -191,7 +185,7 @@ public class RedisCRUD {
                                     String newCountry, String newOccupation) {
 
         try {
-            String oldName = jedis.hmget("film:" + id, "name").get(0);
+            String oldName = jedis.hmget("person:" + id, "name").get(0);
             jedis.del("person:" + id);
             jedis.hmset("person:" + id, new HashMap<String, String>() {{
                 put("name", newName);
@@ -254,7 +248,7 @@ public class RedisCRUD {
 
     public static String deletePerson(String id) {
         try {
-            String oldName = jedis.hmget("film:" + id, "name").get(0);
+            String oldName = jedis.hmget("person:" + id, "name").get(0);
             jedis.del("person:" + id);
 
             jedis.hdel("people_names", oldName);

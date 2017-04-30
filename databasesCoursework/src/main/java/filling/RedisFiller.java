@@ -1,5 +1,6 @@
 package filling;
 
+import com.sun.org.apache.regexp.internal.RE;
 import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public class RedisFiller {
         Random random = new Random();
 
         // connect to database
-        Jedis jedis = new Jedis("localhost");
+        Jedis jedis = new Jedis("redis-19168.c10.us-east-1-3.ec2.cloud.redislabs.com", 19168);
         jedis.flushAll();
 
         // fill people
@@ -72,6 +73,11 @@ public class RedisFiller {
                 put("film_id", Integer.toString(random.nextInt(MOVIES_COUNT)));
             }});
         }
+
+        // fill id-counters
+        jedis.set("counters:people", String.valueOf(PEOPLE_COUNT));
+        jedis.set("counters:films", String.valueOf(MOVIES_COUNT));
+        jedis.set("counters:reviews", String.valueOf(REVIEWS_COUNT));
 
     }
 
