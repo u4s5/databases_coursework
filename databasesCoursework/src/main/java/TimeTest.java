@@ -1,6 +1,7 @@
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.neo4j.driver.v1.AuthTokens;
@@ -26,8 +27,13 @@ public class TimeTest {
     }
 
     public static void testMongo() {
-        MongoClient mongoClient = new MongoClient("localhost", 27017);
-        MongoDatabase db = mongoClient.getDatabase("movieDatabase");
+        MongoClientURI uri = new MongoClientURI("mongodb://u4s5:qwer1234" +
+                "@moviecluster-shard-00-00-zfyol.mongodb.net:27017," +
+                "moviecluster-shard-00-01-zfyol.mongodb.net:27017," +
+                "moviecluster-shard-00-02-zfyol.mongodb.net:27017/movieFinder" +
+                "?ssl=true&replicaSet=MovieCluster-shard-0&authSource=admin");
+        MongoClient mongoClient = new MongoClient(uri);
+        MongoDatabase db = mongoClient.getDatabase("movieFinder");
 
         MongoCollection collection = db.getCollection("films");
 

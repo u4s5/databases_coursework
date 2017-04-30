@@ -1,6 +1,7 @@
 package crud;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -10,6 +11,7 @@ import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -20,8 +22,13 @@ public class MongoCRUD {
     private static MongoDatabase db;
 
     static {
-        MongoClient mongoClient = new MongoClient("localhost", 27017);
-        db = mongoClient.getDatabase("movieDatabase");
+        MongoClientURI uri = new MongoClientURI("mongodb://u4s5:qwer1234" +
+                "@moviecluster-shard-00-00-zfyol.mongodb.net:27017," +
+                "moviecluster-shard-00-01-zfyol.mongodb.net:27017," +
+                "moviecluster-shard-00-02-zfyol.mongodb.net:27017/movieFinder" +
+                "?ssl=true&replicaSet=MovieCluster-shard-0&authSource=admin");
+        MongoClient mongoClient = new MongoClient(uri);
+        db = mongoClient.getDatabase("movieFinder");
     }
 
     public static String createFilm(String name, int year, int duration,
@@ -30,11 +37,17 @@ public class MongoCRUD {
                                     int producerId, int actor1Id,
                                     int actor2Id, int actor3Id) {
 
-        MongoCollection collection = db.getCollection("films");
-        long id = collection.count();
+        MongoCollection collection = db.getCollection("counters");
+        Document document = (Document) (collection.findOneAndUpdate(
+                eq("_id", "filmId"),
+                new Document("$inc", new Document("next", 1))));
+        Iterator iterator = document.values().iterator();
+        iterator.next();
+        Integer id = Integer.valueOf(iterator.next().toString());
 
+        collection = db.getCollection("films");
         try {
-            collection.insertOne(new Document("_id", id + 1)
+            collection.insertOne(new Document("_id", id)
                     .append("name", name)
                     .append("year", year)
                     .append("duration", duration)
@@ -59,17 +72,23 @@ public class MongoCRUD {
             return null;
         }
 
-        return collection.find(eq("_id", id + 1)).iterator().next().toString();
+        return collection.find(eq("_id", id)).iterator().next().toString();
     }
 
     public static String createPerson(String name, String birthday,
                                       String country, String occupation) {
 
-        MongoCollection collection = db.getCollection("people");
-        long id = collection.count();
+        MongoCollection collection = db.getCollection("counters");
+        Document document = (Document) (collection.findOneAndUpdate(
+                eq("_id", "personId"),
+                new Document("$inc", new Document("next", 1))));
+        Iterator iterator = document.values().iterator();
+        iterator.next();
+        Integer id = Integer.valueOf(iterator.next().toString());
 
+        collection = db.getCollection("people");
         try {
-            collection.insertOne(new Document("_id", id + 1)
+            collection.insertOne(new Document("_id", id)
                     .append("name", name)
                     .append("birthday", StringToDateParser.parse(birthday))
                     .append("country", country)
@@ -81,17 +100,23 @@ public class MongoCRUD {
             return null;
         }
 
-        return collection.find(eq("_id", id + 1)).iterator().next().toString();
+        return collection.find(eq("_id", id)).iterator().next().toString();
     }
 
     public static String createReview(String author, int mark, String date,
                                       String text, int filmId) {
 
-        MongoCollection collection = db.getCollection("reviews");
-        long id = collection.count();
+        MongoCollection collection = db.getCollection("counters");
+        Document document = (Document) (collection.findOneAndUpdate(
+                eq("_id", "reviewId"),
+                new Document("$inc", new Document("next", 1))));
+        Iterator iterator = document.values().iterator();
+        iterator.next();
+        Integer id = Integer.valueOf(iterator.next().toString());
 
+        collection = db.getCollection("reviews");
         try {
-            collection.insertOne(new Document("_id", collection.count() + 1)
+            collection.insertOne(new Document("_id", id)
                     .append("author", author)
                     .append("mark", mark)
                     .append("date", StringToDateParser.parse(date))
@@ -102,7 +127,7 @@ public class MongoCRUD {
             return null;
         }
 
-        return collection.find(eq("_id", id + 1)).iterator().next().toString();
+        return collection.find(eq("_id", id)).iterator().next().toString();
     }
 
     public static List<String> findFilm(String name) {

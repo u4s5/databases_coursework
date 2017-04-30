@@ -1,6 +1,7 @@
 package filling;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -18,8 +19,13 @@ public class MongoFiller {
     public static void fill() {
 
         // connect to database
-        MongoClient mongoClient = new MongoClient("localhost", 27017);
-        MongoDatabase db = mongoClient.getDatabase("movieDatabase");
+        MongoClientURI uri = new MongoClientURI("mongodb://u4s5:qwer1234" +
+                "@moviecluster-shard-00-00-zfyol.mongodb.net:27017," +
+                "moviecluster-shard-00-01-zfyol.mongodb.net:27017," +
+                "moviecluster-shard-00-02-zfyol.mongodb.net:27017/movieFinder" +
+                "?ssl=true&replicaSet=MovieCluster-shard-0&authSource=admin");
+        MongoClient mongoClient = new MongoClient(uri);
+        MongoDatabase db = mongoClient.getDatabase("movieFinder");
         db.drop();
 
         Random random = new Random();
@@ -80,6 +86,15 @@ public class MongoFiller {
 
             collection.insertOne(document);
         }
+
+        // fill collection of id-counters
+        collection = db.getCollection("counters");
+        document = new Document("_id", "personId").append("next", PEOPLE_COUNT);
+        collection.insertOne(document);
+        document = new Document("_id", "filmId").append("next", MOVIES_COUNT);
+        collection.insertOne(document);
+        document = new Document("_id", "reviewId").append("next", REVIEWS_COUNT);
+        collection.insertOne(document);
 
         mongoClient.close();
     }

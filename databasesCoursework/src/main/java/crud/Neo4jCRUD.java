@@ -2,6 +2,8 @@ package crud;
 
 import org.neo4j.driver.v1.*;
 
+import javax.swing.text.html.HTMLDocument;
+import java.util.Iterator;
 import java.util.List;
 
 public class Neo4jCRUD {
@@ -22,8 +24,11 @@ public class Neo4jCRUD {
         int id;
 
         try {
-            id = session.run("MATCH (f) RETURN f ORDER BY f.id desc LIMIT 1;")
-                    .next().get("id").asInt() + 1;
+            StatementResult statementResult = session.run("MATCH (f:Film) RETURN f ORDER BY f.id desc LIMIT 1;");
+            Record record = statementResult.next();
+            Value value = record.get("f");
+            Value value2 = value.get("id");
+            id = value2.asInt() + 1;
 
             session.run("CREATE (f:Film {" +
                     "id: " + id + ", " +
@@ -61,8 +66,11 @@ public class Neo4jCRUD {
         int id;
 
         try {
-            id = session.run("MATCH (p) RETURN p ORDER BY p.id desc LIMIT 1;")
-                    .next().get("id").asInt() + 1;
+            StatementResult statementResult = session.run("MATCH (p:Person) RETURN f ORDER BY p.id desc LIMIT 1;");
+            Record record = statementResult.next();
+            Value value = record.get("p");
+            Value value2 = value.get("id");
+            id = value2.asInt() + 1;
 
             session.run("CREATE (p:Person {" +
                     "id: " + id + ", " +
@@ -82,8 +90,11 @@ public class Neo4jCRUD {
         Integer id;
 
         try {
-            id = session.run("MATCH (r) RETURN r ORDER BY r.id desc LIMIT 1;")
-                    .next().get("id").asInt() + 1;
+            StatementResult statementResult = session.run("MATCH (r:Review) RETURN r ORDER BY r.id desc LIMIT 1;");
+            Record record = statementResult.next();
+            Value value = record.get("r");
+            Value value2 = value.get("id");
+            id = value2.asInt() + 1;
 
             session.run("CREATE (r:Review {" +
                     "id: " + id + ", " +
@@ -103,48 +114,43 @@ public class Neo4jCRUD {
     }
 
     public static String findFilm(String name) {
-        List<Value> res;
+        int id;
         try {
-            res = session.run("MATCH (f:Film {name: \"" + name + "\"}) RETURN f ;").next().values();
+            StatementResult statementResult = session.run("MATCH (f:Film {name: \"" + name + "\"}) RETURN f ;");
+            Record record = statementResult.next();
+            Value value = record.get("f");
+            Value value2 = value.get("id");
+            id = value2.asInt();
         } catch (Exception e) {
             System.err.println("Neo4j exception");
             return null;
         }
-
-        StringBuilder result = new StringBuilder();
-        for (Value v : res) result.append(v).append(" ");
-
-        return result.toString();
+        return id + "";
     }
 
     public static String findPerson(String name) {
-        List<Value> res;
+        int id;
         try {
-            res = session.run("MATCH (p:Person {name: \"" + name + "\"}) RETURN p ;").next().values();
+            Value value = session.run("MATCH (p:Person {name: \"" + name + "\"}) RETURN p ;").next().get("f");
+            id = value.get("id").asInt();
         } catch (Exception e) {
             System.err.println("Neo4j exception");
             return null;
         }
 
-        StringBuilder result = new StringBuilder();
-        for (Value v : res) result.append(v).append(" ");
-
-        return result.toString();
+        return id + "";
     }
 
     public static String findReview(String id) {
-        List<Value> res;
+        String review;
         try {
-            res = session.run("MATCH (r:Review {id: " + id + "}) RETURN r ;").next().values();
+            Value value = session.run("MATCH (r:Review {id: " + id + "}) RETURN r ;").next().get("f");
+            review = value.get("review").asString();
         } catch (Exception e) {
             System.err.println("Neo4j exception");
             return null;
         }
-
-        StringBuilder result = new StringBuilder();
-        for (Value v : res) result.append(v).append(" ");
-
-        return result.toString();
+        return review;
     }
 
     public static String editFilm(String id, String newName, String newYear,

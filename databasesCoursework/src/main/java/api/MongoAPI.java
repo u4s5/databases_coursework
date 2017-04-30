@@ -89,7 +89,7 @@ public class MongoAPI {
         });
 
         get("/mongo/reviews", (request, response) -> {
-            String result = findReview(request.queryParams("name")).get(0);
+            String result = findReview(request.queryParams("author")).get(0);
             if (result == null)
                 response.status(404);
             else
