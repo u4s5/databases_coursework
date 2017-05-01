@@ -16,14 +16,14 @@ public class PostgreSQLFiller {
 
         Random random = new Random();
 
-        Connection connection = null;
-        Statement statement = null;
+        Connection connection;
+        Statement statement;
 
         try {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager
-                    .getConnection("jdbc:postgresql://localhost:5432/moviefinder",
-                            "user1", "password");
+                    .getConnection("jdbc:postgresql://aws-us-east-1-portal.5.dblayer.com:18951/compose",
+                            "admin", "qwer1234");
             statement = connection.createStatement();
 
             statement.execute("DROP SCHEMA IF EXISTS moviefinder CASCADE");
@@ -37,6 +37,7 @@ public class PostgreSQLFiller {
                     "mark INT, review TEXT)");
             statement.execute("CREATE TABLE moviefinder.films_people(id SERIAL, film INT, person INT, kind TEXT)");
             statement.execute("CREATE TABLE moviefinder.films_reviews(id SERIAL, film INT, review INT)");
+            statement.execute("CREATE TABLE moviefinder.counters(name TEXT, next_id INT)");
 
             // filling people
             for (int i = 0; i < PEOPLE_COUNT; i++) {
@@ -96,6 +97,20 @@ public class PostgreSQLFiller {
                         random.nextInt(MOVIES_COUNT) +
                         "); ");
             }
+
+            // filling id-counters
+            statement.execute("INSERT INTO moviefinder.counters(name, next_id) VALUES (" +
+                    "\'films\'," +
+                    MOVIES_COUNT +
+                    "); ");
+            statement.execute("INSERT INTO moviefinder.counters(name, next_id) VALUES (" +
+                    "\'people\'," +
+                    PEOPLE_COUNT +
+                    "); ");
+            statement.execute("INSERT INTO moviefinder.counters(name, next_id) VALUES (" +
+                    "\'reviews\'," +
+                    REVIEWS_COUNT +
+                    "); ");
 
         } catch (Exception e) {
             e.printStackTrace();
