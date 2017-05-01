@@ -18,7 +18,8 @@ public class RedisFiller {
         Random random = new Random();
 
         // connect to database
-        Jedis jedis = new Jedis("redis-19168.c10.us-east-1-3.ec2.cloud.redislabs.com", 19168);
+        Jedis jedis = new Jedis("portal.moviefinder.u4s5.composedb.com", 18948);
+        jedis.auth("LKRSLEJLGVLXVENS");
         jedis.flushAll();
 
         // fill people
