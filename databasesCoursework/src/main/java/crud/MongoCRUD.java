@@ -43,7 +43,8 @@ public class MongoCRUD {
                 new Document("$inc", new Document("next", 1))));
         Iterator iterator = document.values().iterator();
         iterator.next();
-        Integer id = Integer.valueOf(iterator.next().toString());
+        String str = iterator.next().toString();
+        Integer id = Integer.valueOf(str.substring(0,str.length()-2));
 
         collection = db.getCollection("films");
         try {
