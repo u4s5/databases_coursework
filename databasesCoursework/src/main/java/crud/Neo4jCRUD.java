@@ -106,7 +106,7 @@ public class Neo4jCRUD {
 
             session.run("MATCH (r:Review {id: " + id + "}), " +
                     "(f:Film {id: " + filmId + "}) " +
-                    "MERGE (p)-[:WRITTEN_FOR]->(f);");
+                    "MERGE (r)-[:WRITTEN_FOR]->(f);");
         } catch (Exception e) {
             System.err.println("Neo4j exception");
             return null;
