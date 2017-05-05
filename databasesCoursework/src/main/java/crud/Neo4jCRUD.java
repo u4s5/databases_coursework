@@ -1,8 +1,10 @@
 package crud;
 
 import org.neo4j.driver.v1.*;
+import org.neo4j.driver.v1.types.Entity;
 
 import javax.swing.text.html.HTMLDocument;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -114,43 +116,63 @@ public class Neo4jCRUD {
     }
 
     public static String findFilm(String name) {
-        int id;
+        List<Record> res = new ArrayList<>();
         try {
             StatementResult statementResult = session.run("MATCH (f:Film {name: \"" + name + "\"}) RETURN f ;");
-            Record record = statementResult.next();
-            Value value = record.get("f");
-            Value value2 = value.get("id");
-            id = value2.asInt();
+            while (statementResult.hasNext()){
+                res.add(statementResult.next());
+            }
         } catch (Exception e) {
             System.err.println("Neo4j exception");
             return null;
         }
-        return id + "";
+
+        StringBuilder result = new StringBuilder();
+        for (Record r : res) {
+            result.append(recordToString(r)).append("\n");
+        }
+
+        return result.toString();
     }
 
     public static String findPerson(String name) {
-        int id;
+        List<Record> res = new ArrayList<>();
         try {
-            Value value = session.run("MATCH (p:Person {name: \"" + name + "\"}) RETURN p ;").next().get("f");
-            id = value.get("id").asInt();
+            StatementResult statementResult = session.run("MATCH (p:Person {name: \"" + name + "\"}) RETURN p ;");
+            while (statementResult.hasNext()){
+                res.add(statementResult.next());
+            }
         } catch (Exception e) {
             System.err.println("Neo4j exception");
             return null;
         }
 
-        return id + "";
+        StringBuilder result = new StringBuilder();
+        for (Record r : res) {
+            result.append(recordToString(r)).append("\n");
+        }
+
+        return result.toString();
     }
 
     public static String findReview(String id) {
-        String review;
+        List<Record> res = new ArrayList<>();
         try {
-            Value value = session.run("MATCH (r:Review {id: " + id + "}) RETURN r ;").next().get("f");
-            review = value.get("review").asString();
+            StatementResult statementResult = session.run("MATCH (r:Review {id: " + id + "}) RETURN r ;");
+            while (statementResult.hasNext()){
+                res.add(statementResult.next());
+            }
         } catch (Exception e) {
             System.err.println("Neo4j exception");
             return null;
         }
-        return review;
+
+        StringBuilder result = new StringBuilder();
+        for (Record r : res) {
+            result.append(recordToString(r)).append("\n");
+        }
+
+        return result.toString();
     }
 
     public static String editFilm(String id, String newName, String newYear,
@@ -264,5 +286,22 @@ public class Neo4jCRUD {
         }
 
         return id;
+    }
+
+
+
+    private static String recordToString(Record record){
+        StringBuilder result = new StringBuilder();
+
+        Entity e = record.values().iterator().next().asEntity();
+
+        Iterator keyIterator = e.asMap().keySet().iterator();
+        Iterator valIterator = e.asMap().values().iterator();
+
+        while(valIterator.hasNext()) {
+            result.append(keyIterator.next()).append(" ").
+                    append(valIterator.next()).append("\n");
+        }
+        return result.toString();
     }
 }
