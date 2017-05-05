@@ -9,9 +9,9 @@ import java.util.Random;
 
 public class CassandraFiller {
 
-    private static final int MOVIES_COUNT = 250000;
-    private static final int PEOPLE_COUNT = 500000;
-    private static final int REVIEWS_COUNT = 500000;
+    private static final int MOVIES_COUNT = 100000;
+    private static final int PEOPLE_COUNT = 200000;
+    private static final int REVIEWS_COUNT = 200000;
 
     public static void fill() {
 

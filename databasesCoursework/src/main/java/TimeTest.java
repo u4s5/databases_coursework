@@ -68,7 +68,7 @@ public class TimeTest {
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < TEST_COUNT; i++) {
-            System.out.println(session.execute("SELECT name FROM movieFinder.films WHERE id=" + random.nextInt(MOVIES_COUNT)).one().getString("name"));
+            System.out.println(session.execute("SELECT name FROM movieFinder.films WHERE id=" + random.nextInt(100000)).one().getString("name"));
         }
 
         System.out.println("____________________\nCASSANDRA\n");
@@ -82,7 +82,7 @@ public class TimeTest {
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < TEST_COUNT; i++) {
-            System.out.println(session.run("MATCH (f:Film) WHERE f.id = " + random.nextInt(MOVIES_COUNT) + " RETURN f.name AS name").next().get("name").asString());
+            System.out.println(session.run("MATCH (f:Film) WHERE f.id = " + random.nextInt(25000) + " RETURN f.name AS name").next().get("name").asString());
         }
 
         System.out.println("____________________\nNEO4J\n");
