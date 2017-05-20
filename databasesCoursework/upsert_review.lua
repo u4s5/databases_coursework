@@ -7,13 +7,14 @@ if Count == 0 then
 	return -1
 end
 
+Count = 0
 						--review id
 for Index, Value in pairs(redis.call('hgetall', 'review:' .. KEYS[6])) do
   Count = Count + 1
 end
 if Count == 0 then
 	Count = redis.call('get', 'counters:reviews')
-else Count = tonumber(KEYS[6])
+else Count = KEYS[6]
 end
 
 redis.call('hmset', 'review:' .. tostring(Count), 'author', KEYS[1],

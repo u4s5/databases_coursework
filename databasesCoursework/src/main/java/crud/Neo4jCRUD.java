@@ -1,5 +1,6 @@
 package crud;
 
+import org.json.JSONObject;
 import org.neo4j.driver.v1.*;
 import org.neo4j.driver.v1.types.Entity;
 
@@ -14,7 +15,7 @@ public class Neo4jCRUD {
 
     static {
         Driver driver = GraphDatabase.driver("bolt://localhost:7687",
-                AuthTokens.basic("neo4j", "qwer1234"));
+                AuthTokens.basic("neo4j", "5287132"));
         session = driver.session();
     }
 
@@ -31,6 +32,20 @@ public class Neo4jCRUD {
             Value value = record.get("f");
             Value value2 = value.get("id");
             id = value2.asInt() + 1;
+
+            List<Record> res = new ArrayList<>();
+            statementResult = session.run("MATCH (f:Film) WHERE f.name = \"" + name + "\" and  f.year = " + year + " RETURN f ;");
+            while (statementResult.hasNext()){
+                res.add(statementResult.next());
+            }
+
+            if(res.size() > 0) return new JSONObject().put("status", "error").toString();
+
+            if(new JSONObject(findPersonById(producerId)).get("status").equals("error")
+                    | new JSONObject(findPersonById(actor1Id)).get("status").equals("error")
+                    | new JSONObject(findPersonById(actor2Id)).get("status").equals("error")
+                    | new JSONObject(findPersonById(actor3Id)).get("status").equals("error"))
+                return new JSONObject().put("status", "error").toString();
 
             session.run("CREATE (f:Film {" +
                     "id: " + id + ", " +
@@ -92,6 +107,9 @@ public class Neo4jCRUD {
         Integer id;
 
         try {
+            if(new JSONObject(findFilmById(filmId)).get("status").equals("error"))
+                return new JSONObject().put("status", "error").toString();
+
             StatementResult statementResult = session.run("MATCH (r:Review) RETURN r ORDER BY r.id desc LIMIT 1;");
             Record record = statementResult.next();
             Value value = record.get("r");
@@ -127,12 +145,10 @@ public class Neo4jCRUD {
             return null;
         }
 
-        StringBuilder result = new StringBuilder();
-        for (Record r : res) {
-            result.append(recordToString(r)).append("\n");
-        }
+        if(res.size() == 0)
+            return new JSONObject().put("status", "error").toString();
 
-        return result.toString();
+        else return recordToJSON(res.get(0)).put("status", "ok").toString();
     }
 
     public static String findPerson(String name) {
@@ -147,12 +163,10 @@ public class Neo4jCRUD {
             return null;
         }
 
-        StringBuilder result = new StringBuilder();
-        for (Record r : res) {
-            result.append(recordToString(r)).append("\n");
-        }
+        if(res.size() == 0)
+            return new JSONObject().put("status", "error").toString();
 
-        return result.toString();
+        else return recordToJSON(res.get(0)).put("status", "ok").toString();
     }
 
     public static String findReview(String id) {
@@ -167,13 +181,46 @@ public class Neo4jCRUD {
             return null;
         }
 
-        StringBuilder result = new StringBuilder();
-        for (Record r : res) {
-            result.append(recordToString(r)).append("\n");
+        if(res.size() == 0)
+            return new JSONObject().put("status", "error").toString();
+
+        else return recordToJSON(res.get(0)).put("status", "ok").toString();
+    }
+
+    public static String findFilmById(String id) {
+        List<Record> res = new ArrayList<>();
+        try {
+            StatementResult statementResult = session.run("MATCH (f:Film {id: " + id + "}) RETURN f ;");
+            while (statementResult.hasNext()){
+                res.add(statementResult.next());
+            }
+            if(res.size() == 0)
+                return new JSONObject().put("status", "error").toString();
+        } catch (Exception e) {
+            System.err.println("Neo4j exception");
+            return null;
         }
 
-        return result.toString();
+        return recordToJSON(res.get(0)).put("status", "ok").toString();
     }
+
+    public static String findPersonById(String id) {
+        List<Record> res = new ArrayList<>();
+        try {
+            StatementResult statementResult = session.run("MATCH (p:Person {id: " + id + "}) RETURN p ;");
+            while (statementResult.hasNext()){
+                res.add(statementResult.next());
+            }
+            if(res.size() == 0)
+                return new JSONObject().put("status", "error").toString();
+        } catch (Exception e) {
+            System.err.println("Neo4j exception");
+            return null;
+        }
+
+        return recordToJSON(res.get(0)).put("status", "ok").toString();
+    }
+
 
     public static String editFilm(String id, String newName, String newYear,
                                   String newDuration, String newCountry,
@@ -182,6 +229,12 @@ public class Neo4jCRUD {
                                   String newActor1Id, String newActor2Id,
                                   String newActor3Id) {
         try {
+            if(new JSONObject(findPersonById(newProducerId)).get("status").equals("error")
+                    | new JSONObject(findPersonById(newActor1Id)).get("status").equals("error")
+                    | new JSONObject(findPersonById(newActor2Id)).get("status").equals("error")
+                    | new JSONObject(findPersonById(newActor3Id)).get("status").equals("error"))
+                return new JSONObject().put("status", "error").toString();
+
             deleteFilm(id);
 
             session.run("CREATE (f:Film {" +
@@ -236,6 +289,9 @@ public class Neo4jCRUD {
     public static String editReview(String id, String newMark,
                                     String newDate, String newText, String newFilmId) {
         try {
+            if(new JSONObject(findFilmById(newFilmId)).get("status").equals("error"))
+                return new JSONObject().put("status", "error").toString();
+
             deleteReview(id);
 
             session.run("CREATE (r:Review {" +
@@ -246,7 +302,7 @@ public class Neo4jCRUD {
 
             session.run("MATCH (r:Review {id: " + id + "}), " +
                     "(f:Film {id: " + newFilmId + "}) " +
-                    "MERGE (p)-[:WRITTEN_FOR]->(f);");
+                    "MERGE (r)-[:WRITTEN_FOR]->(f);");
         } catch (Exception e) {
             System.err.println("Neo4j exception");
             return null;
@@ -256,39 +312,60 @@ public class Neo4jCRUD {
     }
 
     public static String deleteFilm(String id) {
+        List<Record> res = new ArrayList<>();
         try {
+            StatementResult statementResult = session.run("MATCH (f:Film {id: " + id + "}) RETURN f ;");
+            while (statementResult.hasNext()){
+                res.add(statementResult.next());
+            }
+            if(res.size() == 0)
+                return new JSONObject().put("status", "error").toString();
+
             session.run("MATCH (f:Film {id: " + id + "}) DETACH DELETE f ;");
         } catch (Exception e) {
             System.err.println("Neo4j exception");
             return null;
         }
 
-        return id;
+        return recordToJSON(res.get(0)).put("status", "ok").toString();
     }
 
     public static String deletePerson(String id) {
+        List<Record> res = new ArrayList<>();
         try {
+            StatementResult statementResult = session.run("MATCH (p:Person {id: " + id + "}) RETURN p ;");
+            while (statementResult.hasNext()){
+                res.add(statementResult.next());
+            }
+            if(res.size() == 0)
+                return new JSONObject().put("status", "error").toString();
             session.run("MATCH (p:Person {id: " + id + "}) DETACH DELETE p ;");
         } catch (Exception e) {
             System.err.println("Neo4j exception");
             return null;
         }
 
-        return id;
+        return recordToJSON(res.get(0)).put("status", "ok").toString();
     }
 
     public static String deleteReview(String id) {
+        List<Record> res = new ArrayList<>();
         try {
+            StatementResult statementResult = session.run("MATCH (r:Review {id: " + id + "}) RETURN r ;");
+            while (statementResult.hasNext()){
+                res.add(statementResult.next());
+            }
+            if(res.size() == 0)
+                return new JSONObject().put("status", "error").toString();
+
             session.run("MATCH (r:Review {id: " + id + "}) DETACH DELETE r ;");
         } catch (Exception e) {
             System.err.println("Neo4j exception");
             return null;
         }
 
-        return id;
+        return recordToJSON(res.get(0)).put("status", "ok").toString();
     }
-
-
 
     private static String recordToString(Record record){
         StringBuilder result = new StringBuilder();
@@ -303,5 +380,19 @@ public class Neo4jCRUD {
                     append(valIterator.next()).append("\n");
         }
         return result.toString();
+    }
+
+    private static JSONObject recordToJSON(Record record){
+        JSONObject json = new JSONObject();
+
+        Entity e = record.values().iterator().next().asEntity();
+
+        Iterator keyIterator = e.asMap().keySet().iterator();
+        Iterator valIterator = e.asMap().values().iterator();
+
+        while(valIterator.hasNext()) {
+            json.put(keyIterator.next().toString(), valIterator.next().toString());
+        }
+        return json;
     }
 }

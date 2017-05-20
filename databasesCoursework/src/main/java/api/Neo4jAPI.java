@@ -1,5 +1,7 @@
 package api;
 
+import org.json.JSONObject;
+
 import static crud.Neo4jCRUD.*;
 import static spark.Spark.*;
 
@@ -20,8 +22,10 @@ public class Neo4jAPI {
                     request.queryParams("actor1Id"),
                     request.queryParams("actor2Id"),
                     request.queryParams("actor3Id"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(201);
             return result;
@@ -32,8 +36,10 @@ public class Neo4jAPI {
             result = createPerson(request.queryParams("name"),
                     request.queryParams("birthday"),
                     request.queryParams("country"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(201);
             return result;
@@ -45,8 +51,10 @@ public class Neo4jAPI {
                     request.queryParams("date"),
                     request.queryParams("text"),
                     request.queryParams("filmId"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(201);
             return result;
@@ -55,8 +63,10 @@ public class Neo4jAPI {
 
         get("/neo4j/films", (request, response) -> {
             String result = findFilm(request.queryParams("name"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -64,8 +74,10 @@ public class Neo4jAPI {
 
         get("/neo4j/people", (request, response) -> {
             String result = findPerson(request.queryParams("name"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -73,8 +85,10 @@ public class Neo4jAPI {
 
         get("/neo4j/reviews", (request, response) -> {
             String result = findReview(request.queryParams("id"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -98,10 +112,12 @@ public class Neo4jAPI {
                         request.queryParams("actor3Id"));
             } catch (NumberFormatException e) {
                 response.status(404);
-                return e.toString();
+                return new JSONObject().put("status", "error").toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -115,11 +131,14 @@ public class Neo4jAPI {
                         request.queryParams("birthday"),
                         request.queryParams("country"));
             } catch (NumberFormatException e) {
-                response.status(404);
-                return e.toString();
+                    response.status(404);
+                    return new JSONObject().put("status", "error").toString();
+
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -133,12 +152,14 @@ public class Neo4jAPI {
                         request.queryParams("date"),
                         request.queryParams("text"),
                         request.queryParams("filmId"));
-            } catch (NumberFormatException e) {
-                response.status(404);
-                return e.toString();
+            } catch (NumberFormatException e){
+                    response.status(404);
+                    return new JSONObject().put("status", "error").toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -153,8 +174,10 @@ public class Neo4jAPI {
                 response.status(404);
                 return e.toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -165,11 +188,14 @@ public class Neo4jAPI {
             try {
                 result = deletePerson(request.queryParams("id"));
             } catch (NumberFormatException e) {
-                response.status(404);
-                return e.toString();
+                    response.status(404);
+                    return new JSONObject().put("status", "error").toString();
+
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -183,8 +209,10 @@ public class Neo4jAPI {
                 response.status(404);
                 return e.toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;

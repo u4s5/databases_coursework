@@ -72,7 +72,8 @@ public class MongoCRUD {
             return null;
         }
 
-        return collection.find(eq("_id", id)).iterator().next().toString();
+        Object o = collection.find(eq("_id", id)).iterator().next();
+        return  o.toString();
     }
 
     public static String createPerson(String name, String birthday,

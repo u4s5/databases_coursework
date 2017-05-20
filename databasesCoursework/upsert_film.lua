@@ -35,13 +35,14 @@ if Count == 0 then
 	return -1
 end
 
+Count = 0
 						--film id
 for Index, Value in pairs(redis.call('hgetall', 'film:' .. KEYS[12])) do
   Count = Count + 1
 end
 if Count == 0 then
 	Count = redis.call('get', 'counters:films');
-else Count = tonumber(KEYS[12])
+else Count = KEYS[12]
 end
 
 redis.call('hmset', 'film:' .. tostring(Count), 'name', KEYS[1], 'year', KEYS[2],

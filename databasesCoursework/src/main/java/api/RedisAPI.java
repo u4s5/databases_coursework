@@ -1,5 +1,7 @@
 package api;
 
+import org.json.JSONObject;
+
 import static crud.RedisCRUD.*;
 import static spark.Spark.*;
 
@@ -20,8 +22,11 @@ public class RedisAPI {
                     request.queryParams("actor1Id"),
                     request.queryParams("actor2Id"),
                     request.queryParams("actor3Id"));
-            if (result == null)
+
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(201);
             return result;
@@ -33,8 +38,10 @@ public class RedisAPI {
                     request.queryParams("birthday"),
                     request.queryParams("country"),
                     request.queryParams("occupation"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(201);
             return result;
@@ -47,8 +54,10 @@ public class RedisAPI {
                     request.queryParams("date"),
                     request.queryParams("text"),
                     request.queryParams("filmId"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(201);
             return result;
@@ -57,8 +66,10 @@ public class RedisAPI {
 
         get("/redis/films", (request, response) -> {
             String result = findFilm(request.queryParams("name"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -66,8 +77,10 @@ public class RedisAPI {
 
         get("/redis/people", (request, response) -> {
             String result = findPerson(request.queryParams("name"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -75,8 +88,10 @@ public class RedisAPI {
 
         get("/redis/reviews", (request, response) -> {
             String result = findReview(request.queryParams("id"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -99,11 +114,13 @@ public class RedisAPI {
                         request.queryParams("actor2Id"),
                         request.queryParams("actor3Id"));
             } catch (NumberFormatException e) {
-                response.status(404);
-                return e.toString();
+                    response.status(404);
+                    return new JSONObject().put("status", "error").toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -119,10 +136,13 @@ public class RedisAPI {
                         request.queryParams("occupation"));
             } catch (NumberFormatException e) {
                 response.status(404);
-                return e.toString();
+                return new JSONObject().put("status", "error").toString();
+
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -138,11 +158,13 @@ public class RedisAPI {
                         request.queryParams("text"),
                         request.queryParams("filmId"));
             } catch (NumberFormatException e) {
-                response.status(404);
-                return e.toString();
+                    response.status(404);
+                    return new JSONObject().put("status", "error").toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -154,11 +176,13 @@ public class RedisAPI {
             try {
                 result = deleteFilm(request.queryParams("id"));
             } catch (NumberFormatException e) {
-                response.status(404);
-                return e.toString();
+                    response.status(404);
+                    return new JSONObject().put("status", "error").toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -169,11 +193,13 @@ public class RedisAPI {
             try {
                 result = deletePerson(request.queryParams("id"));
             } catch (NumberFormatException e) {
-                response.status(404);
-                return e.toString();
+                    response.status(404);
+                    return new JSONObject().put("status", "error").toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -184,11 +210,13 @@ public class RedisAPI {
             try {
                 result = deleteReview(request.queryParams("id"));
             } catch (NumberFormatException e) {
-                response.status(404);
-                return e.toString();
+                    response.status(404);
+                    return new JSONObject().put("status", "error").toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("status", "error").toString();
+            }
             else
                 response.status(200);
             return result;
