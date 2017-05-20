@@ -1,5 +1,7 @@
 package crud;
 
+import org.json.JSONObject;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -143,12 +145,15 @@ public class PostgresqlCRUD {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM movieFinder.films " +
                     "WHERE name= \'" + name + "\';");
             resultSet.next();
-            result = resultSet.getString("name") + "\n" +
-                    resultSet.getString("year") + "\n" +
-                    resultSet.getString("duration") + "\n" +
-                    resultSet.getString("description") + "\n" +
-                    resultSet.getString("country") + "\n" +
-                    resultSet.getString("rating") + "\nid = " + resultSet.getString("id");
+            result = new JSONObject()
+                    .put("responce_type", "ok")
+                    .put("name", resultSet.getString("name"))
+                    .put("year", resultSet.getInt("year"))
+                    .put("duration", resultSet.getInt("duration"))
+                    .put("descrition", resultSet.getString("description"))
+                    .put("country", resultSet.getString("country"))
+                    .put("rating", resultSet.getDouble("rating"))
+                    .put("id", resultSet.getInt("id")).toString();
         } catch (Exception e) {
             System.err.println("PostgreSQL exception");
             return null;
@@ -164,9 +169,11 @@ public class PostgresqlCRUD {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM movieFinder.people " +
                     "WHERE name= \'" + name + "\';");
             resultSet.next();
-            result = resultSet.getString("name") + "\n" +
-                    resultSet.getString("birthday") + "\n" +
-                    resultSet.getString("country") + "\nid = " + resultSet.getString("id");
+            result = new JSONObject().put("responce_type", "ok")
+                    .put("name", resultSet.getString("name"))
+                    .put("bithday", resultSet.getString("birthday"))
+                    .put("country", resultSet.getString("country"))
+                    .put("id", resultSet.getString("id")).toString();
         } catch (Exception e) {
             System.err.println("PostgreSQL exception");
             return null;
@@ -182,10 +189,12 @@ public class PostgresqlCRUD {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM movieFinder.reviews " +
                     "WHERE id= " + id + ";");
             resultSet.next();
-            result = resultSet.getString("mark") + "\n" +
-                    resultSet.getString("date") + "\n" +
-                    resultSet.getString("text") + "\n" +
-                    resultSet.getString("filmId") + "\nid = " + resultSet.getString("id");
+            result = new JSONObject()
+                    .put("responce_type", "ok")
+                    .put("mark", resultSet.getString("mark"))
+                    .put("date", resultSet.getString("time"))
+                    .put("text", resultSet.getString("review"))
+                    .put("id", resultSet.getString("id")).toString();
         } catch (Exception e) {
             System.err.println("PostgreSQL exception");
             return null;

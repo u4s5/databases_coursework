@@ -1,5 +1,7 @@
 package api;
 
+import org.json.JSONObject;
+
 import static crud.CassandraCRUD.*;
 import static spark.Spark.*;
 
@@ -20,8 +22,10 @@ public class CassandraAPI {
                     request.queryParams("actor1Id"),
                     request.queryParams("actor2Id"),
                     request.queryParams("actor3Id"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("responce_type", "error").toString();
+            }
             else
                 response.status(201);
             return result;
@@ -33,8 +37,10 @@ public class CassandraAPI {
                     request.queryParams("birthday"),
                     request.queryParams("country"),
                     request.queryParams("occupation"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("responce_type", "error").toString();
+            }
             else
                 response.status(201);
             return result;
@@ -46,8 +52,10 @@ public class CassandraAPI {
                     request.queryParams("date"),
                     request.queryParams("text"),
                     request.queryParams("filmId"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("responce_type", "error").toString();
+            }
             else
                 response.status(201);
             return result;
@@ -56,8 +64,10 @@ public class CassandraAPI {
 
         get("/cassandra/films", (request, response) -> {
             String result = findFilm(request.queryParams("name"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("responce_type", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -65,8 +75,10 @@ public class CassandraAPI {
 
         get("/cassandra/people", (request, response) -> {
             String result = findPerson(request.queryParams("name"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("responce_type", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -74,8 +86,10 @@ public class CassandraAPI {
 
         get("/cassandra/reviews", (request, response) -> {
             String result = findReview(request.queryParams("id"));
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("responce_type", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -101,8 +115,10 @@ public class CassandraAPI {
                 response.status(404);
                 return e.toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("responce_type", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -120,8 +136,10 @@ public class CassandraAPI {
                 response.status(404);
                 return e.toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("responce_type", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -139,8 +157,10 @@ public class CassandraAPI {
                 response.status(404);
                 return e.toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("responce_type", "error").toString();
+            }
             else
                 response.status(200);
             return result;
@@ -155,11 +175,13 @@ public class CassandraAPI {
                 response.status(404);
                 return e.toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("responce_type", "error").toString();
+            }
             else
                 response.status(200);
-            return result;
+            return new JSONObject().put("deleted_id", result).toString();
         });
 
         delete("/cassandra/people", (request, response) -> {
@@ -170,11 +192,13 @@ public class CassandraAPI {
                 response.status(404);
                 return e.toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("responce_type", "error").toString();
+            }
             else
                 response.status(200);
-            return result;
+            return new JSONObject().put("deleted_id", result).toString();
         });
 
         delete("/cassandra/reviews", (request, response) -> {
@@ -185,11 +209,13 @@ public class CassandraAPI {
                 response.status(404);
                 return e.toString();
             }
-            if (result == null)
+            if (result == null) {
                 response.status(404);
+                return new JSONObject().put("responce_type", "error").toString();
+            }
             else
                 response.status(200);
-            return result;
+            return new JSONObject().put("deleted_id", result).toString();
         });
 
     }

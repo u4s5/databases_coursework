@@ -1,8 +1,7 @@
 package crud;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.LocalDate;
-import com.datastax.driver.core.Session;
+import com.datastax.driver.core.*;
+import org.json.JSONObject;
 
 public class CassandraCRUD {
 
@@ -21,8 +20,9 @@ public class CassandraCRUD {
         String id;
 
         try {
-            id = session.execute("SELECT COUNT(*) AS count FROM movieFinder.films;")
-                    .one().getString("count");
+            ResultSet resultSet = session.execute("SELECT COUNT(*) AS count FROM movieFinder.films;");
+            id = resultSet.one().toString();
+            id = id.substring(4, id.length() - 1);
 
             session.execute("INSERT INTO movieFinder.films(\"id\", \"name\", " +
                     "\"year\", \"duration\"," +
@@ -74,8 +74,9 @@ public class CassandraCRUD {
         String id;
 
         try {
-            id = session.execute("SELECT COUNT(*) AS count FROM movieFinder.people;")
-                    .one().getString("count");
+            ResultSet resultSet = session.execute("SELECT COUNT(*) AS count FROM movieFinder.people;");
+            id = resultSet.one().toString();
+            id = id.substring(4, id.length() - 1);
 
             session.execute("INSERT INTO movieFinder.people(\"id\", \"name\", \"birthday\", " +
                     "\"country\", \"occupations\") VALUES (" +
@@ -99,8 +100,9 @@ public class CassandraCRUD {
         String id;
 
         try {
-            id = session.execute("SELECT COUNT(*) AS count FROM movieFinder.reviews;")
-                    .one().getString("count");
+            ResultSet resultSet = session.execute("SELECT COUNT(*) AS count FROM movieFinder.reviews;");
+            id = resultSet.one().toString();
+            id = id.substring(4, id.length() - 1);
 
             session.execute("INSERT INTO movieFinder.reviews(\"id\", \"time\", \"mark\", \"review\")" +
                     "VALUES (" +
@@ -127,8 +129,17 @@ public class CassandraCRUD {
         String result;
 
         try {
-            result = session.execute("SELECT * AS count FROM movieFinder.films " +
-                    "WHERE name= " + name + ";").one().toString();
+            Row row = session.execute("SELECT * FROM movieFinder.films " +
+                    "WHERE name=\'" + name + "\' ALLOW FILTERING;").one();
+            result = new JSONObject()
+                    .put("responce_type", "ok")
+                    .put("name", row.getString("name"))
+                    .put("year", row.getInt("year"))
+                    .put("duration", row.getInt("duration"))
+                    .put("descrition", row.getString("description"))
+                    .put("country", row.getString("country"))
+                    .put("rating", row.getFloat("rating"))
+                    .put("id", row.getInt("id")).toString();
         } catch (Exception e) {
             System.err.println("Cassandra exception");
             return null;
@@ -141,8 +152,13 @@ public class CassandraCRUD {
         String result;
 
         try {
-            result = session.execute("SELECT * AS count FROM movieFinder.people " +
-                    "WHERE name= " + name + ";").one().toString();
+            Row row = session.execute("SELECT * FROM movieFinder.people " +
+                    "WHERE name=\'" + name + "\' ALLOW FILTERING;").one();
+            result = new JSONObject().put("responce_type", "ok")
+                    .put("name", row.getString("name"))
+                    .put("bithday", row.getDate("birthday").toString())
+                    .put("country", row.getString("country"))
+                    .put("id", row.getInt("id")).toString();
         } catch (Exception e) {
             System.err.println("Cassandra exception");
             return null;
@@ -155,8 +171,14 @@ public class CassandraCRUD {
         String result;
 
         try {
-            result = session.execute("SELECT * AS count FROM movieFinder.reviews " +
-                    "WHERE id = " + id + ";").one().toString();
+            Row row = session.execute("SELECT * FROM movieFinder.reviews " +
+                    "WHERE id=" + id + " ALLOW FILTERING;").one();
+            result = new JSONObject()
+                    .put("responce_type", "ok")
+                    .put("mark", row.getInt("mark"))
+                    .put("date", row.getDate("time").toString())
+                    .put("text", row.getString("review"))
+                    .put("id", row.getInt("id")).toString();
         } catch (Exception e) {
             System.err.println("Cassandra exception");
             return null;
@@ -173,31 +195,32 @@ public class CassandraCRUD {
                                   String newActor3Id) {
         try {
             session.execute("UPDATE movieFinder.films " +
-                    "SET name = " + newName + ", " +
+                    "SET name = \'" + newName + "\', " +
                     "year = " + newYear + ", " +
                     "duration = " + newDuration + ", " +
-                    "country = " + newCountry + ", " +
+                    "country = \'" + newCountry + "\', " +
                     "rating = " + newRating + ", " +
-                    "description = " + newDescription + ", " +
+                    "description = \'" + newDescription + "\', " +
                     "genres = {\'" + newGenre + "\'} " +
                     "WHERE id = " + id + "; ");
-
+/*
             session.execute("UPDATE movieFinder.films_people " +
                     "SET person = " + newProducerId + ", " +
-                    "kind = " + "producer " +
+                    "kind = " + "\'producer\' " +
                     "WHERE film = " + id + "; ");
             session.execute("UPDATE movieFinder.films_people " +
                     "SET person = " + newActor1Id + ", " +
-                    "kind = " + "actor " +
+                    "kind = " + "\'actor\' " +
                     "WHERE film = " + id + "; ");
             session.execute("UPDATE movieFinder.films_people " +
                     "SET person = " + newActor2Id + ", " +
-                    "kind = " + "actor " +
+                    "kind = " + "\'actor\' " +
                     "WHERE film = " + id + "; ");
             session.execute("UPDATE movieFinder.films_people " +
                     "SET person = " + newActor3Id + ", " +
-                    "kind = " + "actor " +
+                    "kind = " + "\'actor\' " +
                     "WHERE film = " + id + "; ");
+*/
         } catch (Exception e) {
             System.err.println("Cassandra exception");
             return null;
@@ -211,9 +234,9 @@ public class CassandraCRUD {
 
         try {
             session.execute("UPDATE movieFinder.people " +
-                    "SET name = " + newName + ", " +
-                    "birthday = " + LocalDate.fromMillisSinceEpoch(StringToDateParser.parse(newBirthday).getTime()) + ", " +
-                    "country = " + newCountry + ", " +
+                    "SET name = \'" + newName + "\', " +
+                    "birthday =\'" + LocalDate.fromMillisSinceEpoch(StringToDateParser.parse(newBirthday).getTime()) + "\', " +
+                    "country = \'" + newCountry + "\', " +
                     "occupations = {\'" + newOccupation + "\'} " +
                     "WHERE id = " + id + "; ");
         } catch (Exception e) {
@@ -229,14 +252,15 @@ public class CassandraCRUD {
 
         try {
             session.execute("UPDATE movieFinder.reviews " +
-                    "SET time = " + LocalDate.fromMillisSinceEpoch(StringToDateParser.parse(newDate).getTime()) + ", " +
+                    "SET time = \'" + LocalDate.fromMillisSinceEpoch(StringToDateParser.parse(newDate).getTime()) + "\', " +
                     "mark = " + newMark + ", " +
-                    "review = " + newText + " " +
+                    "review = \'" + newText + "\' " +
                     "WHERE id = " + id + "; ");
-
+            /*
             session.execute("UPDATE movieFinder.films_reviews " +
                     "SET film = " + newFilmId + " " +
                     "WHERE review = " + id + "; ");
+            */
         } catch (Exception e) {
             System.err.println("Cassandra exception");
             return null;
@@ -248,7 +272,7 @@ public class CassandraCRUD {
     public static String deleteFilm(String id) {
         try {
             session.execute("DELETE FROM movieFinder.films " +
-                    "WHERE id= " + id + ";");
+                    "WHERE id= " + id + ";").one();
         } catch (Exception e) {
             System.err.println("Cassandra exception");
             return null;
