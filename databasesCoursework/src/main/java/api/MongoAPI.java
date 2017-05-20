@@ -1,5 +1,7 @@
 package api;
 
+import java.util.List;
+
 import static crud.MongoCRUD.*;
 import static spark.Spark.*;
 
@@ -71,27 +73,50 @@ public class MongoAPI {
 
 
         get("/mongo/films", (request, response) -> {
-            String result = findFilm(request.queryParams("name")).get(0);
-            if (result == null)
+            List<String> resultList = findFilm(request.queryParams("name"));
+            String result;
+            if (resultList != null)
+                result = resultList.get(0);
+            else
+                result = null;
+
+            if (result == null) {
                 response.status(404);
+                return "Error{{error_code=404}}";
+            }
             else
                 response.status(200);
             return result;
         });
 
         get("/mongo/people", (request, response) -> {
-            String result = findPerson(request.queryParams("name")).get(0);
-            if (result == null)
+            List<String> resultList = findPerson(request.queryParams("name"));
+            String result;
+            if (resultList != null)
+                result = resultList.get(0);
+            else
+                result = null;
+            if (result == null) {
                 response.status(404);
+                return "Error{{error_code=404}}";
+            }
             else
                 response.status(200);
             return result;
         });
 
         get("/mongo/reviews", (request, response) -> {
-            String result = findReview(request.queryParams("author")).get(0);
-            if (result == null)
+            List<String> resultList = findReview(request.queryParams("author"));
+            String result;
+            if (resultList != null)
+                result = resultList.get(0);
+            else
+                result = null;
+
+            if (result == null) {
                 response.status(404);
+                return "Error{{error_code=404}}";
+            }
             else
                 response.status(200);
             return result;
